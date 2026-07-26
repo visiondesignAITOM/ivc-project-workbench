@@ -2251,79 +2251,79 @@ textarea:focus-visible {
 
 /* Readability pass: the workbench is a decision surface, not a dense data table. */
 body {
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
 
-.brand strong { font-size: 16px; }
-.brand small { font-size: 11px; }
-.nav-label { font-size: 12px; }
+.brand strong { font-size: 15px; }
+.brand small { font-size: 10px; }
+.nav-label { font-size: 11px; }
 .nav-item {
-  font-size: 15px;
-  min-height: 48px;
+  font-size: 14px;
+  min-height: 44px;
 }
 .nav-count,
 .side-plan-head,
-.side-plan p { font-size: 13px; }
+.side-plan p { font-size: 12px; }
 .breadcrumb,
-.sync-state { font-size: 14px; }
+.sync-state { font-size: 13px; }
 
 .primary-button,
 .secondary-button,
 .filter-button {
-  font-size: 15px;
+  font-size: 14px;
   min-height: 44px;
-  padding-inline: 16px;
+  padding-inline: 14px;
 }
 
-.page-head p { font-size: 16px; }
-.eyebrow { font-size: 12px; }
+.page-head p { font-size: 14px; }
+.eyebrow { font-size: 11px; }
 .view-switch button {
-  font-size: 15px;
+  font-size: 14px;
   min-height: 44px;
-  min-width: 76px;
+  min-width: 70px;
 }
 
 .metric-label,
-.metric-grid article > small { font-size: 13px; }
-.metric-grid strong { font-size: 32px; }
-.metric-grid strong small { font-size: 17px; }
+.metric-grid article > small { font-size: 12px; }
+.metric-grid strong { font-size: 28px; }
+.metric-grid strong small { font-size: 15px; }
 
-.overview-step { font-size: 12px; }
-.overview-focus h2 { font-size: 20px; }
-.overview-focus p { font-size: 15px; }
-.overview-focus button { font-size: 14px; min-height: 40px; }
+.overview-step { font-size: 11px; }
+.overview-focus h2 { font-size: 18px; }
+.overview-focus p { font-size: 14px; }
+.overview-focus button { font-size: 13px; min-height: 38px; }
 
 .plan-baseline h2,
 .plan-section h2,
 .critical-path h2,
-.milestone-list h2 { font-size: 22px; }
+.milestone-list h2 { font-size: 19px; }
 .plan-baseline p,
 .plan-section > header p,
 .critical-path header p,
-.milestone-list header p { font-size: 14px; }
-.plan-baseline dt { font-size: 12px; }
-.plan-baseline dd { font-size: 14px; }
+.milestone-list header p { font-size: 13px; }
+.plan-baseline dt { font-size: 11px; }
+.plan-baseline dd { font-size: 13px; }
 
-.phase-id { font-size: 13px; }
-.phase-card h3 { font-size: 20px; }
+.phase-id { font-size: 12px; }
+.phase-card h3 { font-size: 17px; }
 .phase-card header small,
-.phase-count span { font-size: 13px; }
-.phase-count strong { font-size: 26px; }
+.phase-count span { font-size: 12px; }
+.phase-count strong { font-size: 22px; }
 .phase-card > p {
-  font-size: 16px;
-  min-height: 78px;
+  font-size: 14px;
+  min-height: 60px;
 }
-.phase-tasks { gap: 8px; }
+.phase-tasks { gap: 6px; }
 .phase-tasks button {
-  font-size: 13px;
-  min-height: 44px;
-  min-width: 52px;
-  padding-inline: 10px;
+  font-size: 12px;
+  min-height: 40px;
+  min-width: 46px;
+  padding-inline: 8px;
 }
-.phase-card summary { font-size: 14px; min-height: 44px; padding-block: 10px; }
-.phase-card ul { font-size: 14px; }
+.phase-card summary { font-size: 13px; min-height: 40px; padding-block: 8px; }
+.phase-card ul { font-size: 13px; }
 
 .critical-chain small { font-size: 11px; }
 .critical-chain strong { font-size: 13px; }
@@ -2331,102 +2331,102 @@ body {
   min-height: 86px;
   width: 156px;
 }
-.milestone-list > div > button { min-height: 60px; }
+.milestone-list > div > button { min-height: 54px; }
 .milestone-list button > span,
-.milestone-list time { font-size: 12px; }
-.milestone-list button > strong { font-size: 14px; }
+.milestone-list time { font-size: 11px; }
+.milestone-list button > strong { font-size: 13px; }
 
 .search-box,
 .select-wrap { min-height: 44px; }
 .search-box input,
-.select-wrap select { font-size: 16px; }
+.select-wrap select { font-size: 14px; }
 .select-wrap span,
-.result-count { font-size: 13px; }
+.result-count { font-size: 12px; }
 
-.column-head h2 { font-size: 18px; }
+.column-head h2 { font-size: 16px; }
 .column-head > small,
-.column-count { font-size: 13px; }
+.column-count { font-size: 12px; }
 .status-dot { height: 10px; width: 10px; }
-.task-card { padding: 16px; }
-.task-topline { font-size: 12px; }
-.task-card > strong { font-size: 17px; }
-.task-card > p { font-size: 14px; }
-.gate-note { font-size: 13px; }
+.task-card { padding: 14px; }
+.task-topline { font-size: 11px; }
+.task-card > strong { font-size: 15px; }
+.task-card > p { font-size: 13px; }
+.gate-note { font-size: 12px; }
 .pill {
-  font-size: 12px;
-  min-height: 28px;
-  padding-inline: 10px;
+  font-size: 11px;
+  min-height: 26px;
+  padding-inline: 9px;
 }
-.pill-quiet { font-size: 11px; }
+.pill-quiet { font-size: 10px; }
 .empty-state p,
 .empty-state button { font-size: 14px; }
 
-.architecture-flow h2 { font-size: 22px; }
-.architecture-flow p { font-size: 15px; }
+.architecture-flow h2 { font-size: 19px; }
+.architecture-flow p { font-size: 14px; }
 .evidence-basis span,
-.flow-guard span { font-size: 13px; }
-.flow-line b { font-size: 14px; min-width: 78px; }
-.architecture-layer > header span { font-size: 12px; }
-.architecture-layer > header h2 { font-size: 17px; }
-.block-code { font-size: 12px; }
+.flow-guard span { font-size: 12px; }
+.flow-line b { font-size: 13px; min-width: 72px; }
+.architecture-layer > header span { font-size: 11px; }
+.architecture-layer > header h2 { font-size: 15px; }
+.block-code { font-size: 11px; }
 .architecture-block h3,
-.block-progress strong { font-size: 21px; }
-.block-progress span { font-size: 12px; }
-.block-purpose { font-size: 15px; }
+.block-progress strong { font-size: 18px; }
+.block-progress span { font-size: 11px; }
+.block-purpose { font-size: 14px; }
 .block-basis-counts span,
-.block-includes span { font-size: 12px; }
+.block-includes span { font-size: 11px; }
 .block-dependency span,
 .block-list-label,
-.architecture-block footer > span { font-size: 12px; }
+.architecture-block footer > span { font-size: 11px; }
 .block-dependency strong,
-.architecture-block footer > strong { font-size: 14px; }
-.block-task { min-height: 64px; padding: 12px; }
-.block-task small { font-size: 11px; }
-.block-task strong { font-size: 14px; }
-.block-empty { font-size: 14px; }
+.architecture-block footer > strong { font-size: 13px; }
+.block-task { min-height: 56px; padding: 10px; }
+.block-task small { font-size: 10px; }
+.block-task strong { font-size: 13px; }
+.block-empty { font-size: 13px; }
 
-.gantt-intro h2 { font-size: 21px; }
-.gantt-intro p { font-size: 15px; }
-.gantt-legend span { font-size: 13px; }
-.gantt-label-cell strong { font-size: 15px; }
+.gantt-intro h2 { font-size: 19px; }
+.gantt-intro p { font-size: 14px; }
+.gantt-legend span { font-size: 12px; }
+.gantt-label-cell strong { font-size: 14px; }
 .gantt-label-cell small,
 .gantt-months span,
 .gantt-weeks span,
-.gantt-group-head span { font-size: 12px; }
-.gantt-group-head strong { font-size: 14px; }
+.gantt-group-head span { font-size: 11px; }
+.gantt-group-head strong { font-size: 13px; }
 .gantt-task-copy > span,
-.gantt-task-copy > small { font-size: 12px; }
-.gantt-task-copy > strong { font-size: 15px; }
-.gantt-bar span { font-size: 12px; }
+.gantt-task-copy > small { font-size: 11px; }
+.gantt-task-copy > strong { font-size: 14px; }
+.gantt-bar span { font-size: 11px; }
 
 .drawer-id,
-.drawer-kicker { font-size: 13px; }
-.drawer-summary > p { font-size: 17px; }
+.drawer-kicker { font-size: 12px; }
+.drawer-summary > p { font-size: 15px; }
 .summary-basis > span,
 .summary-basis small,
 .field-grid span,
-.add-dialog label > span { font-size: 13px; }
-.field-grid strong { font-size: 16px; }
-.field-grid select { font-size: 16px; min-height: 44px; }
+.add-dialog label > span { font-size: 12px; }
+.field-grid strong { font-size: 14px; }
+.field-grid select { font-size: 14px; min-height: 44px; }
 .drawer-gate span,
-.drawer-gate strong { font-size: 14px; }
+.drawer-gate strong { font-size: 13px; }
 .hierarchy h3,
-.drawer-sections h3 { font-size: 16px; }
+.drawer-sections h3 { font-size: 14px; }
 .hierarchy > div strong,
 .drawer-sections li,
-.muted { font-size: 15px; }
-.drawer-footer > span { font-size: 13px; }
+.muted { font-size: 14px; }
+.drawer-footer > span { font-size: 12px; }
 .add-dialog label input,
 .add-dialog label textarea,
-.add-dialog label select { font-size: 16px; }
-.toast { font-size: 14px; }
+.add-dialog label select { font-size: 15px; }
+.toast { font-size: 13px; }
 
 /* Overview refinement: keep decisions scannable without oversized empty space. */
 .page-head {
   align-items: end;
-  gap: 24px;
-  padding-bottom: 20px;
-  padding-top: 26px;
+  gap: 20px;
+  padding-bottom: 16px;
+  padding-top: 20px;
 }
 
 .page-head > div:first-child {
@@ -2434,9 +2434,9 @@ body {
 }
 
 .page-head h1 {
-  font-size: 36px;
+  font-size: 32px;
   letter-spacing: -0.035em;
-  margin: 8px 0 7px;
+  margin: 6px 0 5px;
 }
 
 .view-switch {
@@ -2444,7 +2444,7 @@ body {
   border-radius: 12px;
   gap: 2px;
   padding: 4px;
-  width: min(420px, 100%);
+  width: min(380px, 100%);
 }
 
 .view-switch button {
@@ -2458,7 +2458,7 @@ body {
 }
 
 .metric-grid {
-  gap: 12px;
+  gap: 10px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
@@ -2466,13 +2466,13 @@ body {
 .metric-grid article:first-child {
   display: flex;
   flex-direction: column;
-  min-height: 142px;
-  padding: 18px 20px;
+  min-height: 118px;
+  padding: 15px 17px;
 }
 
 .metric-grid strong {
   line-height: 1;
-  margin: 16px 0 10px;
+  margin: 12px 0 8px;
 }
 
 .metric-grid article > small {
@@ -2494,7 +2494,7 @@ body {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 18px;
+  margin-top: 14px;
   overflow: visible;
   padding: 0;
 }
@@ -2510,8 +2510,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 132px;
-  padding: 14px;
+  min-height: 108px;
+  padding: 12px;
   width: 100%;
 }
 
@@ -2529,28 +2529,28 @@ body {
   color: #fff;
   display: inline-flex;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11px;
-  height: 28px;
+  font-size: 10px;
+  height: 24px;
   justify-content: center;
   letter-spacing: 0.04em;
-  width: 30px;
+  width: 27px;
 }
 
 .critical-chain small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
   margin: 0;
 }
 
 .critical-chain strong {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
-  margin: 12px 0;
+  margin: 9px 0;
 }
 
 .critical-chain em {
   color: var(--brand-purple);
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 700;
   margin-top: auto;
@@ -2596,11 +2596,11 @@ body {
     padding-bottom: 18px;
   }
   .page-head h1 {
-    font-size: 30px;
+    font-size: 28px;
     line-height: 1.18;
     max-width: none;
   }
-  .page-head p { font-size: 16px; }
+  .page-head p { font-size: 15px; }
   .view-switch {
     gap: 3px;
     overflow-x: auto;
@@ -2615,25 +2615,25 @@ body {
   }
   .metric-grid article,
   .metric-grid article:first-child {
-    min-height: 148px;
-    padding: 16px;
+    min-height: 128px;
+    padding: 14px;
   }
-  .metric-grid strong { margin: 14px 0 9px; }
-  .metric-label { font-size: 14px; }
+  .metric-grid strong { margin: 11px 0 7px; }
+  .metric-label { font-size: 13px; }
   .phase-card,
   .overview-focus article,
   .critical-path,
   .milestone-list { padding: 20px; }
-  .phase-card > p { font-size: 17px; }
-  .phase-tasks button { flex: 1 0 56px; }
+  .phase-card > p { font-size: 15px; }
+  .phase-tasks button { flex: 1 0 56px; min-height: 44px; }
   .plan-baseline dl { grid-template-columns: 1fr; }
   .plan-two-column { gap: 12px; }
   .critical-chain { grid-template-columns: 1fr; }
   .critical-chain button {
-    min-height: 112px;
-    padding: 15px;
+    min-height: 100px;
+    padding: 13px;
   }
-  .critical-chain strong { font-size: 15px; }
+  .critical-chain strong { font-size: 14px; }
   .toolbar { align-items: stretch; }
   .search-box { flex-basis: 100%; }
   .select-wrap { flex-basis: calc(50% - 4px); min-width: 0; }
@@ -2644,7 +2644,7 @@ body {
   }
   .column-head { padding: 18px 16px 15px; }
   .column-body { padding: 12px; }
-  .task-card { min-height: 156px; }
+  .task-card { min-height: 140px; }
   .architecture-flow,
   .gantt-intro { padding: 20px; }
   .architecture-block { padding: 20px; }

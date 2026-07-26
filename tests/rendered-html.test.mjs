@@ -127,6 +127,17 @@ test("keeps the overview metrics aligned and the critical path responsive", asyn
   assert.doesNotMatch(page, /criticalTasks\.length - 1[\s\S]*?<i>→<\/i>/);
 });
 
+test("uses balanced desktop density without shrinking mobile touch targets", async () => {
+  const css = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+  assert.match(css, /\.page-head h1\s*\{\s*font-size:\s*32px/);
+  assert.match(css, /\.metric-grid strong\s*\{\s*font-size:\s*28px/);
+  assert.match(css, /\.metric-grid article,\s*\n\.metric-grid article:first-child[\s\S]*?min-height:\s*118px/);
+  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*?\.phase-tasks button\s*\{[^}]*min-height:\s*44px/);
+});
+
 test("includes a GitHub Pages static deployment workflow", async () => {
   const workflow = await readFile(
     new URL("../.github/workflows/deploy-pages.yml", import.meta.url),
