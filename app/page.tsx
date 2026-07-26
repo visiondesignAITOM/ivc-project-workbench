@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useEffect,
   useMemo,
@@ -8,191 +9,80 @@ import {
   type DragEvent,
   type FormEvent,
 } from "react";
-
-type Status =
-  | "backlog"
-  | "ready"
-  | "implementing"
-  | "verify"
-  | "blocked"
-  | "done";
-type Risk = "低" | "中" | "高";
-
-type Task = {
-  id: string;
-  title: string;
-  summary: string;
-  status: Status;
-  risk: Risk;
-  owner: string;
-  epic: string;
-  story: string;
-  team: string;
-  due: string;
-  gate?: string;
-  evidence: string[];
-  acceptance: string[];
-};
-
-const columns: { id: Status; label: string; hint: string }[] = [
-  { id: "backlog", label: "待辦", hint: "尚未承諾" },
-  { id: "ready", label: "就緒", hint: "可立即開始" },
-  { id: "implementing", label: "進行中", hint: "WIP 上限 3" },
-  { id: "verify", label: "驗證中", hint: "等待證據" },
-  { id: "blocked", label: "受阻", hint: "需要排除" },
-  { id: "done", label: "完成", hint: "已通過關卡" },
-];
-
-const seedTasks: Task[] = [
-  {
-    id: "TASK-096",
-    title: "專案工作台第一版",
-    summary: "建立可操作的看板與藍圖，讓任務狀態能回推工作層級進度。",
-    status: "implementing",
-    risk: "低",
-    owner: "Codex",
-    epic: "專案管理底座",
-    story: "團隊可以在同一處掌握工作狀態",
-    team: "產品",
-    due: "07/28",
-    evidence: ["看板可移動任務", "藍圖可檢視 Epic → Story → Task"],
-    acceptance: ["六個狀態可更新", "進度依任務狀態自動計算", "手機可完成主要操作"],
-  },
-  {
-    id: "TASK-095",
-    title: "分類法保留包與釘選審查",
-    summary: "辨識官方 XBRL 分類法保留包，準備人工釘選審查證據。",
-    status: "verify",
-    risk: "中",
-    owner: "資料治理",
-    epic: "來源會員治理",
-    story: "審查者能確認分類法來源與版本",
-    team: "資料",
-    due: "07/27",
-    gate: "等待人工確認",
-    evidence: ["taxonomy-pin-review-package.md", "taxonomy-dictionary-extract.md"],
-    acceptance: ["保留包雜湊可追溯", "釘選前維持不可寫入"],
-  },
-  {
-    id: "TASK-094",
-    title: "圖譜／報告發布關卡",
-    summary: "避免 staging 證據被誤認為正式發布核准。",
-    status: "blocked",
-    risk: "高",
-    owner: "發布治理",
-    epic: "產品發布治理",
-    story: "發布者能清楚辨識候選與正式資料",
-    team: "治理",
-    due: "待核准",
-    gate: "安全與發布核准未完成",
-    evidence: ["graph-report release gate", "Human H2 limited UAT"],
-    acceptance: ["公開發布維持關閉", "候選資料不升級為 verified"],
-  },
-  {
-    id: "TASK-093",
-    title: "來源會員交接關卡包",
-    summary: "把缺少的人工與證據關卡轉為清楚的下一步。",
-    status: "done",
-    risk: "中",
-    owner: "資料治理",
-    epic: "來源會員治理",
-    story: "審查者能從單一交接包做決策",
-    team: "資料",
-    due: "07/23",
-    evidence: ["s05-gate-bundle.md", "13/13 canary passed"],
-    acceptance: ["列出所有阻擋項", "有效可寫入筆數維持 0"],
-  },
-  {
-    id: "TASK-092",
-    title: "Claim 治理長期藍圖",
-    summary: "記錄 Claim 一級治理的分階段採用路徑與非目標。",
-    status: "done",
-    risk: "低",
-    owner: "產品治理",
-    epic: "產品發布治理",
-    story: "團隊能區分現在邊界與長期架構",
-    team: "產品",
-    due: "07/23",
-    evidence: ["CLAIM_GOVERNANCE_VISION.md"],
-    acceptance: ["長期願景不成為當前阻擋", "候選資料邊界保持不變"],
-  },
-  {
-    id: "TASK-091",
-    title: "節點頁面深度盤點",
-    summary: "盤點部分 DB 連線頁面，整理可逆的深化順序。",
-    status: "ready",
-    risk: "中",
-    owner: "前台",
-    epic: "產品體驗深化",
-    story: "使用者能在節點頁取得一致且可信的資訊",
-    team: "前台",
-    due: "07/30",
-    evidence: ["node-surface-deepening audit"],
-    acceptance: ["不越過圖譜／報告發布關卡", "產出可執行的深化順序"],
-  },
-  {
-    id: "TASK-090",
-    title: "關係邊證據契約",
-    summary: "建立 governed relationship-edge 證據契約。",
-    status: "backlog",
-    risk: "高",
-    owner: "未指派",
-    epic: "資料關係可信度",
-    story: "分析者能追溯關係邊的來源與判定",
-    team: "資料",
-    due: "未排程",
-    evidence: ["relationship-edge-harness"],
-    acceptance: ["不寫入 verified graph edges", "證據缺口可見"],
-  },
-  {
-    id: "TASK-089",
-    title: "產品會員證據契約",
-    summary: "準備產品會員關係的治理契約，不直接寫入資料列。",
-    status: "backlog",
-    risk: "中",
-    owner: "未指派",
-    epic: "資料關係可信度",
-    story: "分析者能追溯產品與公司的會員關係",
-    team: "資料",
-    due: "未排程",
-    evidence: ["product-membership-harness"],
-    acceptance: ["不產生未審查會員列", "契約可由 canary 驗證"],
-  },
-  {
-    id: "TASK-088",
-    title: "公司頁資料子卡驗證",
-    summary: "驗證公司頁能呈現候選資料，同時保留 candidate 邊界。",
-    status: "ready",
-    risk: "中",
-    owner: "前台",
-    epic: "產品體驗深化",
-    story: "使用者能分辨公司資料的品質狀態",
-    team: "前台",
-    due: "07/29",
-    evidence: ["company-subcards-harness"],
-    acceptance: ["子卡顯示資料狀態", "不暴露受限所有權姓名"],
-  },
-];
+import {
+  architectureBlocks,
+  architectureOrder,
+  columns,
+  criticalPath,
+  planMilestones,
+  planPhases,
+  seedTasks,
+  timeline,
+  type Architecture,
+  type Risk,
+  type Status,
+  type Task,
+} from "./project-plan";
 
 const statusLabel = Object.fromEntries(
   columns.map((column) => [column.id, column.label]),
 ) as Record<Status, string>;
 
-function progressFor(status: Status) {
-  return {
-    backlog: 0,
-    ready: 15,
-    implementing: 55,
-    verify: 82,
-    blocked: 45,
-    done: 100,
-  }[status];
-}
+const STORAGE_KEY = "ivc-workbench-v3";
+const PLAN_REVISION = "2026-07-26-evidence-labelled-plan-1";
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+type View = "overview" | "board" | "architecture" | "gantt";
+
+const viewCopy: Record<View, { eyebrow: string; title: string; summary: string }> = {
+  overview: {
+    eyebrow: "PROJECT OVERVIEW",
+    title: "專案總覽",
+    summary: "先看整體進度與風險，再決定要進入哪一個工作頁。",
+  },
+  board: {
+    eyebrow: "WORK BOARD",
+    title: "工作看板",
+    summary: "只處理任務狀態：待辦、就緒、進行、驗證、受阻與完成。",
+  },
+  architecture: {
+    eyebrow: "SYSTEM BUILDING BLOCKS",
+    title: "積木架構",
+    summary: "用 8 個積木看懂整個系統、目前工作與下一步。",
+  },
+  gantt: {
+    eyebrow: "PROJECT TIMELINE",
+    title: "甘特圖",
+    summary: "依日期與前置工作掌握未來兩個月的推進順序。",
+  },
+};
 
 function initials(owner: string) {
   if (owner === "Codex") return "CX";
   if (owner === "未指派") return "—";
   return owner.slice(0, 1);
+}
+
+function shortDate(value: string) {
+  const [, month, day] = value.split(/[-/]/);
+  return `${Number(month)}/${Number(day)}`;
+}
+
+function dateNumber(value: string) {
+  return new Date(`${value}T00:00:00+08:00`).getTime();
+}
+
+function ganttPosition(task: Task) {
+  const range = dateNumber(timeline.end) - dateNumber(timeline.start);
+  const start = Math.max(dateNumber(task.start), dateNumber(timeline.start));
+  const end = Math.min(dateNumber(task.due), dateNumber(timeline.end));
+  const left = ((start - dateNumber(timeline.start)) / range) * 100;
+  const width = Math.max(((end - start) / range) * 100, 1.8);
+  return { left: `${left}%`, width: `${width}%` };
+}
+
+function timelinePercent(value: string) {
+  const range = dateNumber(timeline.end) - dateNumber(timeline.start);
+  return `${((dateNumber(value) - dateNumber(timeline.start)) / range) * 100}%`;
 }
 
 function Pill({ children, tone = "neutral" }: { children: React.ReactNode; tone?: string }) {
@@ -201,30 +91,52 @@ function Pill({ children, tone = "neutral" }: { children: React.ReactNode; tone?
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>(seedTasks);
-  const [view, setView] = useState<"board" | "blueprint">("board");
+  const [view, setView] = useState<View>("overview");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [team, setTeam] = useState("全部");
+  const [architecture, setArchitecture] = useState<"全部" | Architecture>("全部");
   const [onlyMine, setOnlyMine] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [toast, setToast] = useState("");
   const [mobileNav, setMobileNav] = useState(false);
+  const [storageReady, setStorageReady] = useState(false);
   const dragId = useRef<string | null>(null);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("ivc-workbench-v1");
+    const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        setTasks(JSON.parse(saved));
+        const parsed = JSON.parse(saved) as {
+          revision?: string;
+          tasks?: Task[];
+        };
+        if (
+          parsed.revision === PLAN_REVISION &&
+          parsed.tasks?.some((task) => task.id === "TASK-117") &&
+          parsed.tasks.every(
+            (task) =>
+              task.architecture &&
+              task.basis &&
+              task.start &&
+              task.due,
+          )
+        ) {
+          setTasks(parsed.tasks);
+        }
       } catch {
-        window.localStorage.removeItem("ivc-workbench-v1");
+        window.localStorage.removeItem(STORAGE_KEY);
       }
     }
+    setStorageReady(true);
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem("ivc-workbench-v1", JSON.stringify(tasks));
-  }, [tasks]);
+    if (!storageReady) return;
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ revision: PLAN_REVISION, tasks }),
+    );
+  }, [storageReady, tasks]);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -249,14 +161,15 @@ export default function Home() {
     return tasks.filter((task) => {
       const matchesQuery =
         !query ||
-        `${task.id} ${task.title} ${task.summary} ${task.epic} ${task.story}`
+        `${task.id} ${task.title} ${task.summary} ${task.epic} ${task.story} ${task.architecture}`
           .toLowerCase()
           .includes(query);
-      const matchesTeam = team === "全部" || task.team === team;
+      const matchesArchitecture =
+        architecture === "全部" || task.architecture === architecture;
       const matchesMine = !onlyMine || task.owner === "Codex";
-      return matchesQuery && matchesTeam && matchesMine;
+      return matchesQuery && matchesArchitecture && matchesMine;
     });
-  }, [tasks, search, team, onlyMine]);
+  }, [tasks, search, architecture, onlyMine]);
 
   const selected = tasks.find((task) => task.id === selectedId) ?? null;
   const doneCount = tasks.filter((task) => task.status === "done").length;
@@ -264,9 +177,7 @@ export default function Home() {
   const activeCount = tasks.filter((task) =>
     ["ready", "implementing", "verify"].includes(task.status),
   ).length;
-  const totalProgress = Math.round(
-    tasks.reduce((sum, task) => sum + progressFor(task.status), 0) / tasks.length,
-  );
+  const evidenceCount = tasks.filter((task) => task.basis === "已有證據").length;
 
   function moveTask(id: string, status: Status) {
     const task = tasks.find((item) => item.id === id);
@@ -299,10 +210,13 @@ export default function Home() {
         status: "backlog",
         risk: form.get("risk") as Risk,
         owner: "未指派",
-        epic: String(form.get("epic") ?? "專案管理底座"),
-        story: "待規劃 User Story",
-        team: "產品",
-        due: "未排程",
+        epic: String(form.get("epic") ?? "專案管理與決策"),
+        story: "待補上使用者成果",
+        architecture: form.get("architecture") as Architecture,
+        basis: "未來規劃",
+        start: timeline.today,
+        due: String(form.get("due") ?? timeline.today),
+        dependencies: [],
         evidence: [],
         acceptance: ["補上驗收條件"],
       },
@@ -311,53 +225,149 @@ export default function Home() {
     setToast(`${nextId} 已加入待辦`);
   }
 
-  const epicGroups = useMemo(() => {
-    return [...new Set(visibleTasks.map((task) => task.epic))].map((epic) => {
-      const epicTasks = visibleTasks.filter((task) => task.epic === epic);
-      const stories = [...new Set(epicTasks.map((task) => task.story))].map(
-        (story) => ({
-          name: story,
-          tasks: epicTasks.filter((task) => task.story === story),
+  const architectureGroups = useMemo(
+    () =>
+      architectureBlocks
+        .filter(
+          (block) =>
+            architecture === "全部" || block.name === architecture,
+        )
+        .map((block) => {
+          const allTasks = tasks.filter(
+            (task) => task.architecture === block.name,
+          );
+          const filteredTasks = visibleTasks.filter(
+            (task) => task.architecture === block.name,
+          );
+          return {
+            ...block,
+            tasks: filteredTasks,
+            done: allTasks.filter((task) => task.status === "done").length,
+            evidence: allTasks.filter((task) => task.basis === "已有證據").length,
+            planned: allTasks.filter((task) => task.basis === "未來規劃").length,
+            gates: allTasks.filter((task) => task.basis === "人工關卡").length,
+            total: allTasks.length,
+          };
         }),
-      );
-      const progress = Math.round(
-        epicTasks.reduce((sum, task) => sum + progressFor(task.status), 0) /
-          epicTasks.length,
-      );
-      return { epic, stories, progress, count: epicTasks.length };
-    });
-  }, [visibleTasks]);
+    [architecture, tasks, visibleTasks],
+  );
+
+  const phaseGroups = useMemo(
+    () =>
+      planPhases.map((phase) => {
+        const phaseTasks = phase.taskIds
+          .map((id) => tasks.find((task) => task.id === id))
+          .filter((task): task is Task => Boolean(task));
+        const phaseDone = phaseTasks.filter(
+          (task) => task.status === "done",
+        ).length;
+        const phaseStatus: Status =
+          phaseDone === phaseTasks.length
+            ? "done"
+            : phaseTasks.some((task) => task.status === "implementing")
+              ? "implementing"
+              : phaseTasks.some((task) => task.status === "ready")
+                ? "ready"
+                : phaseTasks.some((task) => task.status === "blocked")
+                  ? "blocked"
+                  : "backlog";
+        return {
+          ...phase,
+          tasks: phaseTasks,
+          done: phaseDone,
+          total: phaseTasks.length,
+          status: phaseStatus,
+        };
+      }),
+    [tasks],
+  );
+
+  const criticalTasks = criticalPath
+    .map((id) => tasks.find((task) => task.id === id))
+    .filter((task): task is Task => Boolean(task));
+
+  const ganttGroups = useMemo(
+    () =>
+      architectureOrder
+        .map((name) => ({
+          name,
+          tasks: visibleTasks
+            .filter((task) => task.architecture === name)
+            .sort((a, b) => dateNumber(a.start) - dateNumber(b.start)),
+        }))
+        .filter((group) => group.tasks.length),
+    [visibleTasks],
+  );
+
+  const ganttMonths = [
+    { label: "7 月", width: "16.67%" },
+    { label: "8 月", width: "46.97%" },
+    { label: "9 月", width: "36.36%" },
+  ];
+
+  const ganttWeeks = ["7/21", "7/27", "8/3", "8/10", "8/17", "8/24", "8/31", "9/7", "9/14", "9/21"];
 
   return (
     <div className="app-shell">
       <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`}>
         <div className="brand">
-          <div className="brand-mark" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+          <div className="brand-symbol">
+            <Image
+              src={`${BASE_PATH}/ivc-logo-on-dark.svg`}
+              alt="IVC"
+              width={72}
+              height={27}
+              priority
+            />
           </div>
-          <div>
-            <strong>IVC 工作台</strong>
-            <small>Project OS · alpha</small>
+          <div className="brand-copy">
+            <strong>專案工作台</strong>
+            <small>IVC INTELLIGENCE</small>
           </div>
         </div>
 
         <nav aria-label="主要導覽">
           <p className="nav-label">工作空間</p>
-          <button className="nav-item active" onClick={() => setMobileNav(false)}>
+          <button
+            className={`nav-item ${view === "overview" ? "active" : ""}`}
+            onClick={() => {
+              setView("overview");
+              setMobileNav(false);
+            }}
+          >
             <span className="nav-icon">⌂</span>
-            工作台
+            專案總覽
             <span className="nav-count">{tasks.length}</span>
           </button>
-          <button className="nav-item" onClick={() => setView("blueprint")}>
-            <span className="nav-icon">◇</span>
-            專案藍圖
+          <button
+            className={`nav-item ${view === "board" ? "active" : ""}`}
+            onClick={() => {
+              setView("board");
+              setMobileNav(false);
+            }}
+          >
+            <span className="nav-icon">▤</span>
+            工作看板
           </button>
-          <button className="nav-item" disabled>
-            <span className="nav-icon">↗</span>
-            變更紀錄
-            <Pill tone="quiet">下一階段</Pill>
+          <button
+            className={`nav-item ${view === "architecture" ? "active" : ""}`}
+            onClick={() => {
+              setView("architecture");
+              setMobileNav(false);
+            }}
+          >
+            <span className="nav-icon">▦</span>
+            積木架構
+          </button>
+          <button
+            className={`nav-item ${view === "gantt" ? "active" : ""}`}
+            onClick={() => {
+              setView("gantt");
+              setMobileNav(false);
+            }}
+          >
+            <span className="nav-icon">▥</span>
+            甘特圖
           </button>
 
           <p className="nav-label">快速篩選</p>
@@ -375,7 +385,7 @@ export default function Home() {
             className="nav-item"
             onClick={() => {
               setSearch("");
-              setTeam("全部");
+              setArchitecture("全部");
               setOnlyMine(false);
             }}
           >
@@ -386,13 +396,10 @@ export default function Home() {
 
         <div className="side-plan">
           <div className="side-plan-head">
-            <span>本期推進</span>
-            <strong>{totalProgress}%</strong>
+            <span>已完成工作</span>
+            <strong>{doneCount} / {tasks.length}</strong>
           </div>
-          <div className="progress-track">
-            <span style={{ width: `${totalProgress}%` }} />
-          </div>
-          <p>先完成工作台，再展開全專案規劃與來源連動。</p>
+          <p>目前先完成獨立審查與安全關卡，再啟動下一條價值鏈。</p>
         </div>
       </aside>
 
@@ -408,12 +415,12 @@ export default function Home() {
           <div className="breadcrumb">
             <span>IVC 產業價值鏈資訊平台</span>
             <b>/</b>
-            <strong>專案工作台</strong>
+            <strong>{viewCopy[view].title}</strong>
           </div>
           <div className="top-actions">
             <div className="sync-state" title="目前使用裝置本機儲存">
               <span />
-              狀態已保存
+              本機已保存
             </div>
             <button className="primary-button" onClick={() => setShowAdd(true)}>
               <span>＋</span> 新增任務
@@ -426,11 +433,17 @@ export default function Home() {
 
         <section className="page-head">
           <div>
-            <div className="eyebrow">PROJECT CONTROL ROOM</div>
-            <h1>把變更，變成可推進的工作</h1>
-            <p>任務狀態更新後，藍圖進度會同步重算；先管理眼前工作，再展開全專案。</p>
+            <div className="eyebrow">{viewCopy[view].eyebrow}</div>
+            <h1>{viewCopy[view].title}</h1>
+            <p>{viewCopy[view].summary}</p>
           </div>
           <div className="view-switch" role="group" aria-label="檢視方式">
+            <button
+              className={view === "overview" ? "selected" : ""}
+              onClick={() => setView("overview")}
+            >
+              總覽
+            </button>
             <button
               className={view === "board" ? "selected" : ""}
               onClick={() => setView("board")}
@@ -438,59 +451,70 @@ export default function Home() {
               看板
             </button>
             <button
-              className={view === "blueprint" ? "selected" : ""}
-              onClick={() => setView("blueprint")}
+              className={view === "architecture" ? "selected" : ""}
+              onClick={() => setView("architecture")}
             >
-              藍圖
+              架構
+            </button>
+            <button
+              className={view === "gantt" ? "selected" : ""}
+              onClick={() => setView("gantt")}
+            >
+              甘特圖
             </button>
           </div>
         </section>
 
-        <section className="metric-grid" aria-label="工作摘要">
-          <article>
-            <span className="metric-label">整體推進</span>
-            <strong>{totalProgress}<small>%</small></strong>
-            <div className="progress-track">
-              <span style={{ width: `${totalProgress}%` }} />
-            </div>
-          </article>
-          <article>
-            <span className="metric-label">進行中</span>
-            <strong>{activeCount}</strong>
-            <small>包含就緒與驗證</small>
-          </article>
-          <article>
-            <span className="metric-label">待排除</span>
-            <strong className={blockedCount ? "danger-text" : ""}>
-              {blockedCount}
-            </strong>
-            <small>發布關卡需決策</small>
-          </article>
-          <article>
-            <span className="metric-label">已完成</span>
-            <strong>{doneCount}<small> / {tasks.length}</small></strong>
-            <small>依任務狀態計算</small>
-          </article>
-        </section>
+        {view === "overview" && (
+          <section className="metric-grid" aria-label="工作摘要">
+            <article>
+              <span className="metric-label">全部工作</span>
+              <strong>{tasks.length}</strong>
+              <small>包含已有證據與未來規劃</small>
+            </article>
+            <article>
+              <span className="metric-label">進行中</span>
+              <strong>{activeCount}</strong>
+              <small>包含就緒與驗證</small>
+            </article>
+            <article>
+              <span className="metric-label">待排除</span>
+              <strong className={blockedCount ? "danger-text" : ""}>
+                {blockedCount}
+              </strong>
+              <small>發布關卡需決策</small>
+            </article>
+            <article>
+              <span className="metric-label">已有證據</span>
+              <strong>{evidenceCount}</strong>
+              <small>有 repository 或本機成果可核對</small>
+            </article>
+          </section>
+        )}
 
-        <section className="toolbar" aria-label="看板工具">
+        {view !== "overview" && (
+        <section className="toolbar" aria-label="工作篩選工具">
           <label className="search-box">
             <span aria-hidden="true">⌕</span>
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="搜尋任務、Epic 或 User Story"
+              placeholder="搜尋任務、工作成果或架構分類"
             />
           </label>
           <label className="select-wrap">
-            <span>團隊</span>
-            <select value={team} onChange={(event) => setTeam(event.target.value)}>
+            <span>架構</span>
+            <select
+              value={architecture}
+              onChange={(event) =>
+                setArchitecture(event.target.value as "全部" | Architecture)
+              }
+            >
               <option>全部</option>
-              <option>產品</option>
-              <option>資料</option>
-              <option>前台</option>
-              <option>治理</option>
+              {architectureOrder.map((item) => (
+                <option key={item}>{item}</option>
+              ))}
             </select>
           </label>
           <button
@@ -502,8 +526,149 @@ export default function Home() {
           </button>
           <span className="result-count">{visibleTasks.length} 項工作</span>
         </section>
+        )}
 
-        {view === "board" ? (
+        {view === "overview" ? (
+          <div className="master-plan">
+            <section className="plan-baseline" aria-label="規劃基準">
+              <div>
+                <span className="eyebrow">PLANNING BASELINE</span>
+                <h2>規劃基準與可信度</h2>
+                <p>已完成成果以 repository 與測試為準；人工關卡表示確實被阻擋；未來日期只是建議排程。</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>資料日期</dt>
+                  <dd>2026/07/26</dd>
+                </div>
+                <div>
+                  <dt>Repository</dt>
+                  <dd>main 89f34e8f</dd>
+                </div>
+                <div>
+                  <dt>規劃範圍</dt>
+                  <dd>TASK-097—117</dd>
+                </div>
+                <div>
+                  <dt>發布狀態</dt>
+                  <dd>未授權</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section className="plan-section" aria-labelledby="phase-title">
+              <header>
+                <div>
+                  <span className="eyebrow">EXECUTION PHASES</span>
+                  <h2 id="phase-title">四個執行階段</h2>
+                </div>
+                <p>每一階段必須符合退出條件，才能進入下一階段。</p>
+              </header>
+              <div className="phase-grid">
+                {phaseGroups.map((phase) => (
+                  <article className="phase-card" key={phase.id}>
+                    <header>
+                      <div>
+                        <span className="phase-id">{phase.id}</span>
+                        <h3>{phase.title}</h3>
+                        <small>{phase.period}</small>
+                      </div>
+                      <div className="phase-count">
+                        <strong>{phase.done}/{phase.total}</strong>
+                        <span>{statusLabel[phase.status]}</span>
+                      </div>
+                    </header>
+                    <p>{phase.outcome}</p>
+                    <div className="phase-basis">
+                      <Pill
+                        tone={
+                          phase.basis === "已有證據"
+                            ? "evidence"
+                            : phase.basis === "人工關卡"
+                              ? "gate"
+                              : "plan"
+                        }
+                      >
+                        {phase.basis}
+                      </Pill>
+                    </div>
+                    <div className="phase-tasks">
+                      {phase.tasks.map((task) => (
+                        <button
+                          key={task.id}
+                          onClick={() => setSelectedId(task.id)}
+                          title={task.title}
+                        >
+                          {task.id.replace("TASK-", "")}
+                        </button>
+                      ))}
+                    </div>
+                    <details>
+                      <summary>退出條件</summary>
+                      <ul>
+                        {phase.exitCriteria.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="plan-two-column">
+              <article className="critical-path">
+                <header>
+                  <span className="eyebrow">CRITICAL PATH</span>
+                  <h2>關鍵路徑</h2>
+                  <p>任一項延遲，都會直接推遲最後的發布決策。</p>
+                </header>
+                <div className="critical-chain">
+                  {criticalTasks.map((task, index) => (
+                    <span key={task.id}>
+                      <button onClick={() => setSelectedId(task.id)}>
+                        <small>{task.id}</small>
+                        <strong>{task.title}</strong>
+                      </button>
+                      {index < criticalTasks.length - 1 && <i>→</i>}
+                    </span>
+                  ))}
+                </div>
+              </article>
+
+              <article className="milestone-list">
+                <header>
+                  <span className="eyebrow">MILESTONES</span>
+                  <h2>里程碑與決策點</h2>
+                  <p>日期為規劃日期；只有 M0 已有完成證據。</p>
+                </header>
+                <div>
+                  {planMilestones.map((milestone) => (
+                    <button
+                      key={milestone.id}
+                      onClick={() => setSelectedId(milestone.taskIds[0])}
+                    >
+                      <span>{milestone.id}</span>
+                      <time>{shortDate(milestone.date)}</time>
+                      <strong>{milestone.title}</strong>
+                      <Pill
+                        tone={
+                          milestone.basis === "已有證據"
+                            ? "evidence"
+                            : milestone.basis === "人工關卡"
+                              ? "gate"
+                              : "plan"
+                        }
+                      >
+                        {milestone.basis}
+                      </Pill>
+                    </button>
+                  ))}
+                </div>
+              </article>
+            </section>
+          </div>
+        ) : view === "board" ? (
           <section className="board" aria-label="專案工作看板">
             {columns.map((column) => {
               const list = visibleTasks.filter((task) => task.status === column.id);
@@ -548,7 +713,7 @@ export default function Home() {
                         <div className="task-meta">
                           <div>
                             <Pill tone={`risk-${task.risk}`}>風險 {task.risk}</Pill>
-                            <Pill tone="team">{task.team}</Pill>
+                            <Pill tone="architecture">{task.architecture}</Pill>
                           </div>
                           <span className="avatar avatar-small" title={task.owner}>
                             {initials(task.owner)}
@@ -568,62 +733,217 @@ export default function Home() {
               );
             })}
           </section>
-        ) : (
-          <section className="blueprint" aria-label="專案藍圖">
-            <div className="blueprint-intro">
+        ) : view === "architecture" ? (
+          <section className="architecture-board" aria-label="系統積木架構">
+            <div className="architecture-flow">
               <div>
-                <span className="layer-tag layer-epic">EPIC</span>
-                <span className="layer-line" />
-                <span className="layer-tag layer-story">USER STORY</span>
-                <span className="layer-line" />
-                <span className="layer-tag layer-task">TASK</span>
+                <span className="eyebrow">HOW THE SYSTEM WORKS</span>
+                <h2>八個積木，共同組成 IVC</h2>
+                <p>資料與後端提供底座，AI 和自動化提高處理能力，前端與介面交付給使用者；治理安全與測試發布保護整條路徑。</p>
+                <div className="evidence-basis">
+                  <span><b>資料基準</b> 2026/07/26</span>
+                  <span><b>Repository</b> main 89f34e8f</span>
+                  <span><b>數字定義</b> 僅計算工作項目，不代表系統完成率</span>
+                </div>
               </div>
-              <p>任務狀態是唯一進度來源；上層百分比會自動回推。</p>
+              <div className="flow-line" aria-label="主要資料流">
+                {["資料", "後端", "AI", "自動化", "前端", "介面"].map(
+                  (item, index, items) => (
+                    <span key={item}>
+                      <b>{item}</b>
+                      {index < items.length - 1 && <i>→</i>}
+                    </span>
+                  ),
+                )}
+              </div>
+              <div className="flow-guard">
+                <span>治理安全：全程限制什麼可以做</span>
+                <span>測試發布：最後確認什麼可以交付</span>
+              </div>
             </div>
-            <div className="epic-list">
-              {epicGroups.map((group) => (
-                <article className="epic-card" key={group.epic}>
-                  <header>
-                    <div>
-                      <Pill tone="epic">EPIC</Pill>
-                      <h2>{group.epic}</h2>
-                      <p>{group.count} 個任務 · {group.stories.length} 個 User Story</p>
-                    </div>
-                    <div className="epic-progress">
-                      <strong>{group.progress}%</strong>
-                      <div className="progress-track">
-                        <span style={{ width: `${group.progress}%` }} />
+
+            {(["使用體驗層", "資料智慧層", "信任交付層"] as const).map(
+              (layer) => {
+                const blocks = architectureGroups.filter(
+                  (block) => block.layer === layer,
+                );
+                if (!blocks.length) return null;
+                return (
+                  <section className="architecture-layer" key={layer}>
+                    <header>
+                      <div>
+                        <span>{layer}</span>
+                        <h2>
+                          {layer === "使用體驗層"
+                            ? "使用者直接看見與操作的部分"
+                            : layer === "資料智慧層"
+                              ? "讓資料可以累積、研究與運轉的核心"
+                              : "確保資料可信、系統安全、交付可回復"}
+                        </h2>
                       </div>
+                    </header>
+                    <div className="architecture-grid">
+                      {blocks.map((block) => (
+                        <article
+                          className={`architecture-block block-${block.code.toLowerCase()}`}
+                          key={block.name}
+                        >
+                          <header>
+                            <div>
+                              <span className="block-code">{block.code}</span>
+                              <h3>{block.name}</h3>
+                            </div>
+                            <div className="block-progress">
+                              <strong>{block.done}/{block.total}</strong>
+                              <span>工作已完成</span>
+                            </div>
+                          </header>
+                          <p className="block-purpose">{block.purpose}</p>
+                          <div className="block-basis-counts">
+                            <span>已有證據 {block.evidence}</span>
+                            <span>未來規劃 {block.planned}</span>
+                            <span>人工關卡 {block.gates}</span>
+                          </div>
+                          <div className="block-includes">
+                            {block.includes.map((item) => (
+                              <span key={item}>{item}</span>
+                            ))}
+                          </div>
+                          <div className="block-dependency">
+                            <span>需要的積木</span>
+                            <strong>
+                              {block.dependsOn.length
+                                ? block.dependsOn.join("、")
+                                : "它是整個系統的共同底線"}
+                            </strong>
+                          </div>
+                          <div className="block-task-list">
+                            <span className="block-list-label">目前工作</span>
+                            {block.tasks.length ? (
+                              block.tasks.map((task) => (
+                                <button
+                                  key={task.id}
+                                  onClick={() => setSelectedId(task.id)}
+                                  className={`block-task block-task-${task.status}`}
+                                >
+                                  <span>
+                                    <small>{task.id}</small>
+                                    <strong>{task.title}</strong>
+                                  </span>
+                                  <span className="block-task-tags">
+                                    <Pill
+                                      tone={
+                                        task.basis === "已有證據"
+                                          ? "evidence"
+                                          : task.basis === "人工關卡"
+                                            ? "gate"
+                                            : "plan"
+                                      }
+                                    >
+                                      {task.basis}
+                                    </Pill>
+                                    <Pill tone="quiet">{statusLabel[task.status]}</Pill>
+                                  </span>
+                                </button>
+                              ))
+                            ) : (
+                              <p className="block-empty">目前篩選條件下沒有工作。</p>
+                            )}
+                          </div>
+                          <footer>
+                            <span>下一步</span>
+                            <strong>{block.next}</strong>
+                          </footer>
+                        </article>
+                      ))}
                     </div>
-                  </header>
-                  <div className="story-list">
-                    {group.stories.map((story) => (
-                      <section className="story-row" key={story.name}>
-                        <div className="story-copy">
-                          <Pill tone="story">STORY</Pill>
-                          <strong>{story.name}</strong>
-                        </div>
-                        <div className="story-tasks">
-                          {story.tasks.map((task) => (
-                            <button
-                              key={task.id}
-                              onClick={() => setSelectedId(task.id)}
-                              className={`story-task task-status-${task.status}`}
-                            >
-                              <span className="status-dot" />
-                              <span>
-                                <small>{task.id}</small>
-                                <strong>{task.title}</strong>
-                              </span>
-                              <Pill tone="quiet">{statusLabel[task.status]}</Pill>
-                            </button>
-                          ))}
-                        </div>
-                      </section>
-                    ))}
+                  </section>
+                );
+              },
+            )}
+          </section>
+        ) : (
+          <section className="gantt" aria-label="專案甘特圖">
+            <div className="gantt-intro">
+              <div>
+                <span className="eyebrow">LOCAL PLAN · 2026/07—09</span>
+                <h2>這一版排程先解決「能不能安全往下走」</h2>
+                <p>紅色工作不是正在執行，而是等待人工決策；通過前不會進入公開發布。</p>
+              </div>
+              <div className="gantt-legend" aria-label="甘特圖狀態圖例">
+                {columns.map((column) => (
+                  <span key={column.id} className={`legend-${column.id}`}>
+                    <i />
+                    {column.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="gantt-scroll">
+              <div className="gantt-chart">
+                <div className="gantt-header gantt-grid-row">
+                  <div className="gantt-label-cell">
+                    <strong>工作與架構</strong>
+                    <small>點選工作查看白話重點與證據</small>
                   </div>
-                </article>
-              ))}
+                  <div className="gantt-time-head">
+                    <div className="gantt-months">
+                      {ganttMonths.map((month) => (
+                        <span key={month.label} style={{ width: month.width }}>
+                          {month.label}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="gantt-weeks">
+                      {ganttWeeks.map((week) => (
+                        <span key={week}>{week}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {ganttGroups.map((group) => (
+                  <section className="gantt-group" key={group.name}>
+                    <header className="gantt-group-head">
+                      <strong>{group.name}</strong>
+                      <span>{group.tasks.length} 項工作</span>
+                    </header>
+                    {group.tasks.map((task) => (
+                      <div className="gantt-grid-row gantt-task-row" key={task.id}>
+                        <button
+                          className="gantt-task-copy"
+                          onClick={() => setSelectedId(task.id)}
+                        >
+                          <span>{task.id}</span>
+                          <strong>{task.title}</strong>
+                          <small>
+                            {shortDate(task.start)}—{shortDate(task.due)}
+                            {task.dependencies.length
+                              ? ` · 前置 ${task.dependencies.join("、")}`
+                              : " · 無前置工作"}
+                          </small>
+                        </button>
+                        <div className="gantt-track">
+                          <span
+                            className="gantt-today"
+                            style={{ left: timelinePercent(timeline.today) }}
+                            aria-label="今天"
+                          />
+                          <button
+                            className={`gantt-bar gantt-bar-${task.status}`}
+                            style={ganttPosition(task)}
+                            onClick={() => setSelectedId(task.id)}
+                            title={`${task.id} ${task.title}，${statusLabel[task.status]}`}
+                          >
+                            <span>{task.title}</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </section>
+                ))}
+              </div>
             </div>
           </section>
         )}
@@ -665,13 +985,28 @@ export default function Home() {
             </header>
             <div className="drawer-body">
               <div className="drawer-summary">
+                <span className="drawer-kicker">白話重點</span>
                 <p>{selected.summary}</p>
-                <div className="summary-progress">
-                  <span>完成度</span>
-                  <strong>{progressFor(selected.status)}%</strong>
-                  <div className="progress-track">
-                    <span style={{ width: `${progressFor(selected.status)}%` }} />
-                  </div>
+                <div className="summary-basis">
+                  <span>資料性質</span>
+                  <Pill
+                    tone={
+                      selected.basis === "已有證據"
+                        ? "evidence"
+                        : selected.basis === "人工關卡"
+                          ? "gate"
+                          : "plan"
+                    }
+                  >
+                    {selected.basis}
+                  </Pill>
+                  <small>
+                    {selected.basis === "已有證據"
+                      ? "可由任務文件、Git 或本機成果核對。"
+                      : selected.basis === "人工關卡"
+                        ? "阻擋狀態有文件依據，但仍需要人工作出決定。"
+                        : "這是依前置工作安排的建議，不是已承諾日期。"}
+                  </small>
                 </div>
               </div>
               <div className="field-grid">
@@ -699,31 +1034,53 @@ export default function Home() {
                   <Pill tone={`risk-${selected.risk}`}>{selected.risk}風險</Pill>
                 </div>
                 <div>
+                  <span>架構分類</span>
+                  <strong>{selected.architecture}</strong>
+                </div>
+                <div>
+                  <span>開始日</span>
+                  <strong>{shortDate(selected.start)}</strong>
+                </div>
+                <div>
                   <span>目標日</span>
-                  <strong>{selected.due}</strong>
+                  <strong>{shortDate(selected.due)}</strong>
                 </div>
               </div>
               {selected.gate && (
                 <div className="drawer-gate">
-                  <span>阻擋關卡</span>
+                  <span>為什麼現在不能往下走</span>
                   <strong>{selected.gate}</strong>
                 </div>
               )}
               <section className="hierarchy">
-                <h3>工作脈絡</h3>
+                <h3>這項工作屬於哪裡</h3>
                 <div>
-                  <span className="layer-tag layer-epic">EPIC</span>
+                  <span className="layer-tag layer-epic">專案主題</span>
                   <strong>{selected.epic}</strong>
                 </div>
                 <span className="hierarchy-stem" />
                 <div>
-                  <span className="layer-tag layer-story">STORY</span>
+                  <span className="layer-tag layer-story">完成後的成果</span>
                   <strong>{selected.story}</strong>
                 </div>
               </section>
               <div className="drawer-sections">
                 <section>
-                  <h3>驗收條件</h3>
+                  <h3>前置工作</h3>
+                  {selected.dependencies.length ? (
+                    <ul>
+                      {selected.dependencies.map((item) => (
+                        <li key={item}>
+                          <span>→</span>{item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="muted">沒有前置工作，可以獨立安排。</p>
+                  )}
+                </section>
+                <section>
+                  <h3>做到什麼才算完成</h3>
                   <ul>
                     {selected.acceptance.map((item) => (
                       <li key={item}>
@@ -733,7 +1090,7 @@ export default function Home() {
                   </ul>
                 </section>
                 <section>
-                  <h3>證據與相關檔案</h3>
+                  <h3>依據與相關檔案</h3>
                   {selected.evidence.length ? (
                     <ul>
                       {selected.evidence.map((item) => (
@@ -781,13 +1138,14 @@ export default function Home() {
             </label>
             <div className="form-row">
               <label>
-                <span>歸屬 Epic</span>
-                <select name="epic" defaultValue="專案管理底座">
-                  <option>專案管理底座</option>
-                  <option>來源會員治理</option>
-                  <option>產品發布治理</option>
-                  <option>產品體驗深化</option>
-                  <option>資料關係可信度</option>
+                <span>歸屬專案主題</span>
+                <select name="epic" defaultValue="專案管理與決策">
+                  <option>專案管理與決策</option>
+                  <option>公司黃金頁產品化</option>
+                  <option>規模化資料與公司頁</option>
+                  <option>資料可信度與計算</option>
+                  <option>下一條價值鏈擴張</option>
+                  <option>品質與發布治理</option>
                 </select>
               </label>
               <label>
@@ -797,6 +1155,20 @@ export default function Home() {
                   <option>中</option>
                   <option>高</option>
                 </select>
+              </label>
+            </div>
+            <div className="form-row">
+              <label>
+                <span>架構分類</span>
+                <select name="architecture" defaultValue="介面">
+                  {architectureOrder.map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>目標日</span>
+                <input name="due" type="date" defaultValue={timeline.today} />
               </label>
             </div>
             <footer>
