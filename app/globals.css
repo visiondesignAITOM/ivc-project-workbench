@@ -2421,6 +2421,146 @@ body {
 .add-dialog label select { font-size: 16px; }
 .toast { font-size: 14px; }
 
+/* Overview refinement: keep decisions scannable without oversized empty space. */
+.page-head {
+  align-items: end;
+  gap: 24px;
+  padding-bottom: 20px;
+  padding-top: 26px;
+}
+
+.page-head > div:first-child {
+  max-width: 680px;
+}
+
+.page-head h1 {
+  font-size: 36px;
+  letter-spacing: -0.035em;
+  margin: 8px 0 7px;
+}
+
+.view-switch {
+  border: 1px solid #d9dbe0;
+  border-radius: 12px;
+  gap: 2px;
+  padding: 4px;
+  width: min(420px, 100%);
+}
+
+.view-switch button {
+  border-radius: 9px;
+  flex: 1;
+  min-width: 0;
+}
+
+.view-switch button.selected {
+  box-shadow: 0 2px 8px rgba(20, 21, 24, 0.1);
+}
+
+.metric-grid {
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.metric-grid article,
+.metric-grid article:first-child {
+  display: flex;
+  flex-direction: column;
+  min-height: 142px;
+  padding: 18px 20px;
+}
+
+.metric-grid strong {
+  line-height: 1;
+  margin: 16px 0 10px;
+}
+
+.metric-grid article > small {
+  line-height: 1.55;
+  margin-top: auto;
+}
+
+.plan-two-column {
+  align-items: start;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.8fr);
+}
+
+.critical-path,
+.milestone-list {
+  align-self: start;
+}
+
+.critical-chain {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 18px;
+  overflow: visible;
+  padding: 0;
+}
+
+.critical-chain > span {
+  display: block;
+  min-width: 0;
+}
+
+.critical-chain button {
+  align-items: flex-start;
+  background: var(--surface-soft);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 132px;
+  padding: 14px;
+  width: 100%;
+}
+
+.critical-card-top {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.critical-step {
+  align-items: center;
+  background: var(--brand-purple);
+  border-radius: 6px;
+  color: #fff;
+  display: inline-flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  height: 28px;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  width: 30px;
+}
+
+.critical-chain small {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 0;
+}
+
+.critical-chain strong {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+
+.critical-chain em {
+  color: var(--brand-purple);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  margin-top: auto;
+}
+
+@media (max-width: 1180px) {
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plan-two-column { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 840px) {
   .topbar { min-height: 64px; }
   .mobile-menu {
@@ -2446,6 +2586,8 @@ body {
   .toolbar > * { flex: 1 1 auto; }
   .select-wrap { min-width: 170px; }
   .architecture-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .critical-chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 560px) {
@@ -2454,7 +2596,7 @@ body {
     padding-bottom: 18px;
   }
   .page-head h1 {
-    font-size: 32px;
+    font-size: 30px;
     line-height: 1.18;
     max-width: none;
   }
@@ -2467,8 +2609,16 @@ body {
     flex: 1 0 auto;
     min-width: 70px;
   }
-  .metric-grid { grid-template-columns: 1fr; }
-  .metric-grid article { min-height: 112px; padding: 18px; }
+  .metric-grid {
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .metric-grid article,
+  .metric-grid article:first-child {
+    min-height: 148px;
+    padding: 16px;
+  }
+  .metric-grid strong { margin: 14px 0 9px; }
   .metric-label { font-size: 14px; }
   .phase-card,
   .overview-focus article,
@@ -2477,6 +2627,13 @@ body {
   .phase-card > p { font-size: 17px; }
   .phase-tasks button { flex: 1 0 56px; }
   .plan-baseline dl { grid-template-columns: 1fr; }
+  .plan-two-column { gap: 12px; }
+  .critical-chain { grid-template-columns: 1fr; }
+  .critical-chain button {
+    min-height: 112px;
+    padding: 15px;
+  }
+  .critical-chain strong { font-size: 15px; }
   .toolbar { align-items: stretch; }
   .search-box { flex-basis: 100%; }
   .select-wrap { flex-basis: calc(50% - 4px); min-width: 0; }
@@ -2526,6 +2683,12 @@ body {
     overflow-y: auto;
     padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
   }
+}
+
+@media (max-width: 360px) {
+  .metric-grid { grid-template-columns: 1fr; }
+  .metric-grid article,
+  .metric-grid article:first-child { min-height: 124px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

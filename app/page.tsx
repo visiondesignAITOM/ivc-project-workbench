@@ -627,10 +627,15 @@ export default function Home() {
                   {criticalTasks.map((task, index) => (
                     <span key={task.id}>
                       <button onClick={() => setSelectedId(task.id)}>
-                        <small>{task.id}</small>
+                        <span className="critical-card-top">
+                          <b className="critical-step">
+                            {String(index + 1).padStart(2, "0")}
+                          </b>
+                          <small>{task.id}</small>
+                        </span>
                         <strong>{task.title}</strong>
+                        <em>{task.architecture}</em>
                       </button>
-                      {index < criticalTasks.length - 1 && <i>→</i>}
                     </span>
                   ))}
                 </div>

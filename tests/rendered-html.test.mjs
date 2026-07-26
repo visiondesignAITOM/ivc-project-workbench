@@ -107,8 +107,24 @@ test("keeps primary mobile controls readable and touch friendly", async () => {
   assert.match(css, /-webkit-text-size-adjust:\s*100%/);
   assert.match(css, /\.view-switch button[\s\S]*?min-height:\s*44px/);
   assert.match(css, /\.phase-tasks button[\s\S]*?min-height:\s*44px/);
-  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*?\.metric-grid\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*?\.metric-grid[\s\S]*?grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
   assert.match(css, /\.gantt-scroll::before[\s\S]*左右滑動查看完整時程/);
+});
+
+test("keeps the overview metrics aligned and the critical path responsive", async () => {
+  const css = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+  const page = await readFile(
+    new URL("../app/page.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(css, /\.metric-grid article,\s*\n\.metric-grid article:first-child[\s\S]*?display:\s*flex/);
+  assert.match(css, /\.critical-chain[\s\S]*?grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*?\.critical-chain\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(page, /className="critical-step"/);
+  assert.doesNotMatch(page, /criticalTasks\.length - 1[\s\S]*?<i>→<\/i>/);
 });
 
 test("includes a GitHub Pages static deployment workflow", async () => {
