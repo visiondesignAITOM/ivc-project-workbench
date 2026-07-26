@@ -132,10 +132,30 @@ test("uses balanced desktop density without shrinking mobile touch targets", asy
     new URL("../app/globals.css", import.meta.url),
     "utf8",
   );
-  assert.match(css, /\.page-head h1\s*\{\s*font-size:\s*32px/);
-  assert.match(css, /\.metric-grid strong\s*\{\s*font-size:\s*28px/);
-  assert.match(css, /\.metric-grid article,\s*\n\.metric-grid article:first-child[\s\S]*?min-height:\s*118px/);
+  assert.match(css, /\.page-head h1\s*\{\s*font-size:\s*30px/);
+  assert.match(css, /\.metric-grid strong\s*\{\s*font-size:\s*26px/);
+  assert.match(css, /\.metric-grid article,\s*\n\.metric-grid article:first-child[\s\S]*?min-height:\s*108px/);
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*?\.phase-tasks button\s*\{[^}]*min-height:\s*44px/);
+});
+
+test("keeps inner information panels light", async () => {
+  const css = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+  for (const selector of [
+    ".plan-baseline",
+    ".blueprint-intro",
+    ".architecture-flow",
+  ]) {
+    const escaped = selector.replace(".", "\\.");
+    assert.match(
+      css,
+      new RegExp(`${escaped}\\s*\\{[\\s\\S]*?background:\\s*var\\(--surface\\)`),
+    );
+  }
+  assert.doesNotMatch(css, /\.plan-baseline\s*\{[^}]*background:\s*var\(--nav\)/);
+  assert.doesNotMatch(css, /\.architecture-flow\s*\{[^}]*background:\s*var\(--nav\)/);
 });
 
 test("includes a GitHub Pages static deployment workflow", async () => {

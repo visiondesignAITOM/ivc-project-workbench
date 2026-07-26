@@ -494,9 +494,11 @@ textarea:focus-visible {
 
 .plan-baseline {
   align-items: center;
-  background: var(--nav);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  color: #fff;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
   display: grid;
   gap: 24px;
   grid-template-columns: 1.2fr 1fr;
@@ -522,7 +524,7 @@ textarea:focus-visible {
 }
 
 .plan-baseline p {
-  color: #aeb4c4;
+  color: var(--muted);
 }
 
 .plan-baseline dl {
@@ -533,13 +535,14 @@ textarea:focus-visible {
 }
 
 .plan-baseline dl > div {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
   min-height: 54px;
   padding: 10px 12px;
 }
 
 .plan-baseline dt {
-  color: #9da5b9;
+  color: var(--muted);
   font-size: 8px;
   margin-bottom: 5px;
 }
@@ -1041,7 +1044,7 @@ textarea:focus-visible {
 .pill-evidence { background: var(--green-soft); color: var(--green); }
 .pill-plan { background: #eef1f5; color: #626873; }
 .pill-gate { background: var(--amber-soft); color: var(--amber); }
-.pill-quiet { background: #303238; color: #979ba4; font-size: 7px; }
+.pill-quiet { background: #eef0f3; color: #686d77; font-size: 7px; }
 .pill-epic { background: var(--amber-soft); color: var(--amber); }
 .pill-story { background: var(--blue-soft); color: var(--blue); }
 
@@ -1073,9 +1076,11 @@ textarea:focus-visible {
 
 .blueprint-intro {
   align-items: center;
-  background: var(--nav);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  color: #fff;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
@@ -1089,7 +1094,7 @@ textarea:focus-visible {
 }
 
 .blueprint-intro p {
-  color: #9da1aa;
+  color: var(--muted);
   font-size: 10px;
   margin: 0;
 }
@@ -1223,9 +1228,11 @@ textarea:focus-visible {
 }
 
 .architecture-flow {
-  background: var(--nav);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 14px;
-  color: #fff;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
   margin-bottom: 14px;
   padding: 20px;
 }
@@ -1236,7 +1243,7 @@ textarea:focus-visible {
 }
 
 .architecture-flow p {
-  color: #aeb4c4;
+  color: var(--muted);
   font-size: 11px;
   line-height: 1.65;
   margin: 0;
@@ -1251,12 +1258,12 @@ textarea:focus-visible {
 }
 
 .evidence-basis span {
-  color: #aeb4c4;
+  color: var(--muted);
   font-size: 8px;
 }
 
 .evidence-basis b {
-  color: #fff;
+  color: var(--ink);
   margin-right: 4px;
 }
 
@@ -1276,8 +1283,8 @@ textarea:focus-visible {
 }
 
 .flow-line b {
-  background: rgba(255, 255, 255, 0.09);
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
   border-radius: 7px;
   display: block;
   font-size: 10px;
@@ -1293,7 +1300,7 @@ textarea:focus-visible {
 }
 
 .flow-guard {
-  border-top: 1px solid rgba(255, 255, 255, 0.11);
+  border-top: 1px solid var(--line);
   display: flex;
   flex-wrap: wrap;
   gap: 7px 18px;
@@ -1301,7 +1308,7 @@ textarea:focus-visible {
 }
 
 .flow-guard span {
-  color: #c1c6d3;
+  color: var(--muted);
   font-size: 9px;
 }
 
@@ -2251,43 +2258,43 @@ textarea:focus-visible {
 
 /* Readability pass: the workbench is a decision surface, not a dense data table. */
 body {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
 
-.brand strong { font-size: 15px; }
+.brand strong { font-size: 14px; }
 .brand small { font-size: 10px; }
 .nav-label { font-size: 11px; }
 .nav-item {
-  font-size: 14px;
-  min-height: 44px;
+  font-size: 13px;
+  min-height: 42px;
 }
 .nav-count,
 .side-plan-head,
 .side-plan p { font-size: 12px; }
 .breadcrumb,
-.sync-state { font-size: 13px; }
+.sync-state { font-size: 12px; }
 
 .primary-button,
 .secondary-button,
 .filter-button {
-  font-size: 14px;
-  min-height: 44px;
+  font-size: 13px;
+  min-height: 40px;
   padding-inline: 14px;
 }
 
-.page-head p { font-size: 14px; }
+.page-head p { font-size: 13px; }
 .eyebrow { font-size: 11px; }
 .view-switch button {
-  font-size: 14px;
-  min-height: 44px;
+  font-size: 13px;
+  min-height: 40px;
   min-width: 70px;
 }
 
 .metric-label,
-.metric-grid article > small { font-size: 12px; }
-.metric-grid strong { font-size: 28px; }
+.metric-grid article > small { font-size: 11px; }
+.metric-grid strong { font-size: 26px; }
 .metric-grid strong small { font-size: 15px; }
 
 .overview-step { font-size: 11px; }
@@ -2298,7 +2305,7 @@ body {
 .plan-baseline h2,
 .plan-section h2,
 .critical-path h2,
-.milestone-list h2 { font-size: 19px; }
+.milestone-list h2 { font-size: 18px; }
 .plan-baseline p,
 .plan-section > header p,
 .critical-path header p,
@@ -2307,13 +2314,13 @@ body {
 .plan-baseline dd { font-size: 13px; }
 
 .phase-id { font-size: 12px; }
-.phase-card h3 { font-size: 17px; }
+.phase-card h3 { font-size: 16px; }
 .phase-card header small,
 .phase-count span { font-size: 12px; }
 .phase-count strong { font-size: 22px; }
 .phase-card > p {
-  font-size: 14px;
-  min-height: 60px;
+  font-size: 13px;
+  min-height: 52px;
 }
 .phase-tasks { gap: 6px; }
 .phase-tasks button {
@@ -2361,8 +2368,8 @@ body {
 .empty-state p,
 .empty-state button { font-size: 14px; }
 
-.architecture-flow h2 { font-size: 19px; }
-.architecture-flow p { font-size: 14px; }
+.architecture-flow h2 { font-size: 18px; }
+.architecture-flow p { font-size: 13px; }
 .evidence-basis span,
 .flow-guard span { font-size: 12px; }
 .flow-line b { font-size: 13px; min-width: 72px; }
@@ -2372,7 +2379,7 @@ body {
 .architecture-block h3,
 .block-progress strong { font-size: 18px; }
 .block-progress span { font-size: 11px; }
-.block-purpose { font-size: 14px; }
+.block-purpose { font-size: 13px; }
 .block-basis-counts span,
 .block-includes span { font-size: 11px; }
 .block-dependency span,
@@ -2385,8 +2392,8 @@ body {
 .block-task strong { font-size: 13px; }
 .block-empty { font-size: 13px; }
 
-.gantt-intro h2 { font-size: 19px; }
-.gantt-intro p { font-size: 14px; }
+.gantt-intro h2 { font-size: 18px; }
+.gantt-intro p { font-size: 13px; }
 .gantt-legend span { font-size: 12px; }
 .gantt-label-cell strong { font-size: 14px; }
 .gantt-label-cell small,
@@ -2434,7 +2441,7 @@ body {
 }
 
 .page-head h1 {
-  font-size: 32px;
+  font-size: 30px;
   letter-spacing: -0.035em;
   margin: 6px 0 5px;
 }
@@ -2466,8 +2473,8 @@ body {
 .metric-grid article:first-child {
   display: flex;
   flex-direction: column;
-  min-height: 118px;
-  padding: 15px 17px;
+  min-height: 108px;
+  padding: 14px 16px;
 }
 
 .metric-grid strong {
@@ -2607,6 +2614,7 @@ body {
   }
   .view-switch button {
     flex: 1 0 auto;
+    min-height: 44px;
     min-width: 70px;
   }
   .metric-grid {
